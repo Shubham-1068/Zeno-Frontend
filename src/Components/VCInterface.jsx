@@ -194,7 +194,6 @@ const VCscreen = () => {
               <video
                 ref={localVideoRef}
                 autoPlay
-                muted
                 playsInline
                 className="w-full h-full object-contain"
               />
@@ -226,7 +225,6 @@ const VCscreen = () => {
               <video
                 ref={localVideoRef}
                 autoPlay
-                muted
                 playsInline
                 className="w-full object-cover"
               />
