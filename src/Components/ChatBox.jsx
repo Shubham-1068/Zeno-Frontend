@@ -36,7 +36,7 @@ const Chat = ({ username }) => {
   }, [messages]);
 
   return (
-    <div className="flex flex-col h-full overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden bg-white">
       <div className="p-3 bg-[#01AAC1] flex items-center justify-center gap-2 cursor-default">
         <MessagesSquare className="text-white" size={22} />
         <h2 className="text-lg font-semibold text-white text-center">Chat</h2>

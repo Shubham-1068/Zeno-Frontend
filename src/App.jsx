@@ -1,17 +1,16 @@
-import react from 'react'
-import VCInterface from './Components/VCInterface'
-import VCInterfaceMobileDevices from './Components/VCInterfaceMobileDevices'
-import Navbar from './Components/Navbar'
+import react from "react";
+import VCInterface from "./Components/VCInterface";
+import VCInterfaceMobileDevices from "./Components/VCInterfaceMobileDevices";
+import Navbar from "./Components/Navbar";
+import {isMobile} from "react-device-detect";
 
-function App() {
-
+const App = () => {
   return (
-    <>
+    <div className="h-screen w-screen">
       <Navbar />
-      {/* <VCInterface /> */}
-      <VCInterfaceMobileDevices />
-    </>
-  )
-}
+      {isMobile ? <VCInterfaceMobileDevices /> : <VCInterface />}
+    </div>
+  );
+};
 
-export default App
+export default App;

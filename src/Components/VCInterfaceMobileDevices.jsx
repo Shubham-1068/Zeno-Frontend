@@ -9,6 +9,13 @@ import {
   Users,
   Share,
   Settings,
+  ChartAreaIcon,
+  MessageSquareCode,
+  MessageSquareDashed,
+  MessageSquare,
+  Cross,
+  CrossIcon,
+  X,
 } from "lucide-react";
 import Chatbox from "./ChatBox";
 import Logo from "../assets/Logo.png";
@@ -19,11 +26,13 @@ const VCscreen = () => {
   const [username, setUsername] = useState("");
   const [allUsers, setAllUsers] = useState({});
   const [caller, setCaller] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
   const endCallBtnRef = useRef(null);
   const joinBtnRef = useRef(null);
   const connectBtnRef = useRef(null);
+  const chatBoxRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
@@ -54,7 +63,7 @@ const VCscreen = () => {
     });
 
     socket.current.on("pv", (data) => {
-      if (data === "true") {
+      if (data === "true" && isJoined) {
         connectBtnRef.current.style.display = "none";
       }
     });
@@ -204,7 +213,6 @@ const VCscreen = () => {
       setIsVideoOff(!isVideoOff);
     }
   };
-  
 
   return (
     <div className="h-screen w-screen bg-[#ffffff] text-white">
@@ -232,7 +240,7 @@ const VCscreen = () => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter your username"
+                placeholder="Username"
                 className="w-full px-5 py-2 rounded-lg bg-slate-200 text-black text-lg font-semibold border-2 border-[#01aac1] focus:outline-none focus:border-[#01aac1] focus:ring-2 focus:ring-[#01aac1]"
               />
               <button
@@ -280,7 +288,7 @@ const VCscreen = () => {
           </div>
 
           {/* Control Bar */}
-          <div className="h-[70px] -mt-4 flex items-center justify-center gap-7 px-4">
+          <div className="h-[70px] -mt-4 flex items-center justify-center px-4 gap-3">
             <button
               onClick={toggleMute}
               className={`p-4 rounded-full ${
@@ -306,6 +314,12 @@ const VCscreen = () => {
               )}
             </button>
             <button
+              className="p-4 rounded-full bg-[#01aac1] hover:bg-opacity-80 transition-colors"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+              <MessageSquare className="w-6 h-6" />
+            </button>
+            <button
               ref={endCallBtnRef}
               onClick={handleEndCall}
               className="p-4 px-8 rounded-full bg-red-500 hover:bg-red-600 transition-colors"
@@ -316,68 +330,76 @@ const VCscreen = () => {
         </div>
 
         {/* Participants Panel */}
-        
-            <div
-            ref={connectBtnRef}
-            className="h-screen w-screen absolute z-20 top-0 left-0 bg-[#0000005b]"
-          >
-            <div className="w-screen absolute bottom-0 left-0 h-[290px]">
-              <div className="w-[90%] h-full mx-auto bg-[#ffffff] border-2 border-[#01aac1] md:flex flex-col rounded-t-xl overflow-y-auto">
-                {" "}
-                <div className="flex items-center justify-between mb-2 text-white bg-[#01aac1] px-4 py-3">
-                  <h2 className="text-lg font-semibold flex items-center gap-2">
-                    <Users className="w-5 h-5" />
-                    Participants
-                  </h2>
-                  <button className="text-sm font-semibold px-3 py-1 rounded-lg bg-white text-black">
-                    {Object.keys(allUsers).length} Active
-                  </button>
-                </div>
-                {!isJoined && (
-                  <div className="flex items-center gap-3 mx-auto my-auto text-xl text-black absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    No User Connected!
-                  </div>
-                )}
-                {isJoined && (
-                  <div className="flex-1 overflow-y-auto text-white w-[90%] mx-auto font-semibold">
-                    {Object.keys(allUsers).map((user) => (
-                      <div
-                        key={user + Math.random()}
-                        className="flex items-center justify-between p-2 rounded-lg mb-2 border-2 bg-[#01aac1] cursor-pointer"
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-black font-bold">
-                            {user[0].toUpperCase()}
-                          </div>
-                          <span>
-                            {user} {user === username ? "(You)" : ""}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {Object.keys(allUsers).length >= 2 &&
-                  username === Object.keys(allUsers).at(-1) && (
-                    <div className="w-full px-4">
-                      <button
-                        key={username}
-                        onClick={() => startCall(Object.keys(allUsers).at(-2))}
-                        className="p-2 text-lg text-white bg-green-600 hover:bg-green-700 mx-auto w-full rounded-xl"
-                      >
-                        Connect
-                      </button>
-                    </div>
-                  )}
+
+        <div
+          ref={connectBtnRef}
+          className="h-screen w-screen absolute z-20 top-0 left-0 bg-[#0000005b]"
+        >
+          <div className="w-screen absolute bottom-0 left-0 h-[290px]">
+            <div className="w-[90%] h-full mx-auto bg-[#ffffff] border-2 border-[#01aac1] md:flex flex-col rounded-t-xl overflow-y-auto">
+              {" "}
+              <div className="flex items-center justify-between mb-2 text-white bg-[#01aac1] px-4 py-3">
+                <h2 className="text-lg font-semibold flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Participants
+                </h2>
+                <button className="text-sm font-semibold px-3 py-1 rounded-lg bg-white text-black">
+                  {Object.keys(allUsers).length} Active
+                </button>
               </div>
+              {!isJoined && (
+                <div className="flex items-center gap-3 mx-auto my-auto text-xl text-black absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  No User Connected!
+                </div>
+              )}
+              {isJoined && (
+                <div className="flex-1 overflow-y-auto text-white w-[90%] mx-auto font-semibold">
+                  {Object.keys(allUsers).map((user) => (
+                    <div
+                      key={user + Math.random()}
+                      className="flex items-center justify-between p-2 rounded-lg mb-2 border-2 bg-[#01aac1] cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-black font-bold">
+                          {user[0].toUpperCase()}
+                        </div>
+                        <span>
+                          {user} {user === username ? "(You)" : ""}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {Object.keys(allUsers).length >= 2 &&
+                username === Object.keys(allUsers).at(-1) && (
+                  <div className="w-full px-4">
+                    <button
+                      key={username}
+                      onClick={() => startCall(Object.keys(allUsers).at(-2))}
+                      className="p-2 text-lg text-white bg-green-600 hover:bg-green-700 mx-auto w-full rounded-xl"
+                    >
+                      Connect
+                    </button>
+                  </div>
+                )}
             </div>
           </div>
+        </div>
       </div>
 
       {/* Chatbox Section */}
-      <div className="mt-3 border-2 border-[#01aac1] h-[58%] w-80 rounded-xl overflow-hidden hidden">
-        <Chatbox username={username} />
-      </div>
+      {isOpen && (
+        <div className="fixed top-0 z-10 left-0 w-screen h-screen bg-[#0000005b] flex items-center justify-center">
+            <div
+          className="relative mx-auto border-2 border-[#01aac1] h-[58%] w-80 rounded-xl overflow-hidden"
+          ref={chatBoxRef}
+        >
+          <Chatbox username={username} />
+          <X className="w-8 h-8 absolute z-20 top-2 right-4 cursor-pointer border-2 rounded-full p-1" color="white" onClick={() => setIsOpen(false)}/>
+        </div>
+        </div>
+      )}
     </div>
   );
 };

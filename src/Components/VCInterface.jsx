@@ -34,7 +34,7 @@ const VCscreen = () => {
   useEffect(() => {
     setIsJoined(false);
 
-    socket.current = io("https://zeno-backend-ptat.onrender.com");
+    socket.current = io("https://zeno-backend-442t.onrender.com");
     socket.current.on("connect", () => {
       console.log("Connected to server");
       socket.current.emit("clearUsers", {});
