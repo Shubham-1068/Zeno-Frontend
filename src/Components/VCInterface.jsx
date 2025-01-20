@@ -312,7 +312,7 @@ const VCscreen = () => {
           {/* user info section */}
           <div
             id="join-btn"
-            className="absolute z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-screen w-screen hidden items-center bg-[#ffffff]"
+            className="absolute z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-screen w-screen flex items-center bg-[#ffffff]"
           >
             <div className="relative h-full w-[60vw] flex px-16 justify-between items-center text-center bg-[#01aac1] text-black">
               <div className="flex items-center my-auto">
