@@ -216,10 +216,16 @@ const VCscreen = () => {
 
   return (
     <div className="h-screen w-screen bg-[#ffffff] text-white">
+
       <div
         id="join-btn"
         className="absolute top-0 left-0 z-40 h-screen w-screen hidden items-center bg-[#ffffff]"
       >
+        {/* Logo */}
+      <div className="absolute top-4 left-4 flex items-center">
+        <img src={Logo} alt="logo" className="h-12 w-12 rounded-2xl" />
+        <span className="ml-4 text-3xl font-bold">Zeno</span>
+      </div>
         <div className="relative h-full w-[100vw] flex flex-col items-center justify-center text-center bg-transparent text-black">
           <div className="absolute h-full w-full top-0 -z-10">
             <img
@@ -391,13 +397,17 @@ const VCscreen = () => {
       {/* Chatbox Section */}
       {isOpen && (
         <div className="fixed top-0 z-10 left-0 w-screen h-screen bg-[#0000005b] flex items-center justify-center">
-            <div
-          className="relative mx-auto border-2 border-[#01aac1] h-[58%] w-80 rounded-xl overflow-hidden"
-          ref={chatBoxRef}
-        >
-          <Chatbox username={username} />
-          <X className="w-8 h-8 absolute z-20 top-2 right-4 cursor-pointer border-2 rounded-full p-1" color="white" onClick={() => setIsOpen(false)}/>
-        </div>
+          <div
+            className="relative mx-auto border-2 border-[#01aac1] h-[58%] w-80 rounded-xl overflow-hidden"
+            ref={chatBoxRef}
+          >
+            <Chatbox username={username} />
+            <X
+              className="w-8 h-8 absolute z-20 top-2 right-4 cursor-pointer border-2 rounded-full p-1"
+              color="white"
+              onClick={() => setIsOpen(false)}
+            />
+          </div>
         </div>
       )}
     </div>
