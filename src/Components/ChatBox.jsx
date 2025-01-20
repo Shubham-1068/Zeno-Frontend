@@ -9,7 +9,7 @@ const Chat = ({ username }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    socket.current = io("https://zeno-backend-ptat.onrender.com");
+    socket.current = io("https://zeno-backend-442t.onrender.com");
     socket.current.on("allmessages", (message) => {
       setMessages(...messages, message);
       console.log(message);
