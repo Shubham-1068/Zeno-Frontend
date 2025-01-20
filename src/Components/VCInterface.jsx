@@ -297,10 +297,12 @@ const VCscreen = () => {
           </div>
         </div>
 
-        {/* Participants Panel */}
-        <div className="hidden mt-[88px] mr-4 w-80 min-h-[190px] max-h-[270px] bg-[#ffffff] border-2 border-[#01aac1] md:flex flex-col rounded-xl overflow-y-auto">
+        {/* Right Panel */}
+        <div className="mt-[88px] mr-4 w-80">
+          {/* Participants Panel */}
+        <div className="hidden w-full h-[38%] bg-[#ffffff] border-2 border-[#01aac1] md:flex flex-col rounded-xl overflow-y-auto">
           {" "}
-          <div className="flex items-center justify-between mb-6 text-white bg-[#01aac1] p-4">
+          <div className="flex items-center justify-between mb-2 text-white bg-[#01aac1] px-4 py-3">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Users className="w-5 h-5" />
               People on call
@@ -342,7 +344,7 @@ const VCscreen = () => {
               </div>
               <div className="h-1/2 w-[70%] max-w-[380px] border-4 border-[#01aac1] bg-slate-200 p-6 rounded-2xl shadow-lg flex flex-col items-center justify-center">
               <p className="text-2xl font-bold flex items-center justify-center">
-                <img src={Start} alt="start" className="h-48" />
+                <img src={Start} alt="start" className="h-40" />
               </p>
                 <form onSubmit={handleUserSubmit} className="flex flex-col w-[90%] h-[90%] justify-around">
                   <input
@@ -370,11 +372,11 @@ const VCscreen = () => {
             </div>
           )}
           {isJoined && (
-            <div className="flex-1 overflow-y-auto -mt-1 text-white w-[90%] mx-auto font-semibold">
+            <div className="flex-1 overflow-y-auto text-white w-[90%] mx-auto font-semibold">
               {Object.keys(allUsers).map((user) => (
                 <div
                   key={user + Math.random()}
-                  className="flex items-center justify-between p-3 rounded-lg mb-2 border-2 bg-[#01aac1] cursor-pointer"
+                  className="flex items-center justify-between p-2 rounded-lg mb-2 border-2 bg-[#01aac1] cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-black font-bold">
@@ -400,9 +402,11 @@ const VCscreen = () => {
               </button>
             )}
         </div>
-        <div className="absolute top-[48%] right-4 border-2 border-[#01aac1] h-[50%] w-80 rounded-xl overflow-hidden">
+        <div className="mt-3 border-2 border-[#01aac1] h-[58%] w-80 rounded-xl overflow-hidden">
           <Chatbox username={username} />
         </div>
+        </div>
+        
       </div>
     </div>
   );

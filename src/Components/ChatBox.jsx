@@ -9,10 +9,7 @@ const Chat = ({ username }) => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Initialize socket connection
-    socket.current = io("http://localhost:8000"); // Ensure the URL is correct
-
-    // Listen for incoming messages
+    socket.current = io("https://zeno-backend-ptat.onrender.com");
     socket.current.on("allmessages", (message) => {
       setMessages(...messages, message);
       console.log(message);
