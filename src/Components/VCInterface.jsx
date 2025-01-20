@@ -10,6 +10,10 @@ import {
   Share,
   Settings,
 } from "lucide-react";
+import Chatbox from "./ChatBox";
+import Logo from "../assets/Logo.png";
+import Zeno from "../assets/zenobg.png";
+import Start from "../assets/start.png";
 
 const VCscreen = () => {
   const [username, setUsername] = useState("");
@@ -18,6 +22,7 @@ const VCscreen = () => {
   const localVideoRef = useRef(null);
   const remoteVideoRef = useRef(null);
   const endCallBtnRef = useRef(null);
+  const joinBtnRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
@@ -102,6 +107,12 @@ const VCscreen = () => {
     return pc;
   };
 
+  useEffect(() => {
+    if (!allUsers[username]) {
+      document.getElementById("join-btn").style.display = "flex";
+    }
+  });
+
   const getPeerConnection = () => {
     if (
       !peerConnection.current ||
@@ -129,7 +140,7 @@ const VCscreen = () => {
       pc.close();
       peerConnection.current = null;
       setCaller([]);
-      endCallBtnRef.current.style.display = "none";
+      // endCallBtnRef.current.style.display = "none";
     }
   };
 
@@ -148,7 +159,9 @@ const VCscreen = () => {
   };
 
   const handleUserSubmit = (e) => {
-    document.getElementById("join-btn").style.display = "none";
+    if (username.trim() !== "") {
+      document.getElementById("join-btn").style.display = "none";
+    }
 
     e.preventDefault();
     if (username.trim() !== "") {
@@ -183,14 +196,14 @@ const VCscreen = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#070712] text-white">
-      <div className="flex h-screen">
+    <div className="min-h-screen bg-[#ffffff] text-white">
+      <div className="relative flex h-screen">
         {/* Main Content */}
         <div className="relative flex-1 flex flex-col h-[88%] mt-20 px-5 md:px-0">
           {/* Video Grid small screen */}
           <div className="md:hidden flex flex-col gap-3 h-[90%]">
             {/* Local Video */}
-            <div className="relative rounded-2xl overflow-hidden bg-[#0c0c22] flex flex-col justify-center items-center h-1/2">
+            <div className="relative rounded-2xl overflow-hidden bg-[#ffffff] flex flex-col justify-center items-center h-1/2">
               <video
                 ref={localVideoRef}
                 autoPlay
@@ -204,7 +217,7 @@ const VCscreen = () => {
             </div>
 
             {/* Remote Video */}
-            <div className="relative rounded-2xl overflow-hidden bg-[#0c0c22] flex flex-col justify-center items-center h-1/2">
+            <div className="relative rounded-2xl overflow-hidden bg-[#ffffff] flex flex-col justify-center items-center h-1/2">
               <video
                 ref={remoteVideoRef}
                 autoPlay
@@ -221,25 +234,30 @@ const VCscreen = () => {
 
           {/* Video Grid big screen */}
           <div className="hidden flex-1 md:grid grid-cols-2 gap-4 p-2 px-5 h-[90%]">
-            <div className="relative rounded-2xl overflow-hidden bg-[#0c0c22] h-full flex flex-col justify-center items-center">
+            <div className="relative rounded-2xl overflow-hidden border-2 border-[#01aac1] h-full flex flex-col justify-center items-center">
               <video
                 ref={localVideoRef}
                 autoPlay
                 playsInline
                 className="w-full object-cover"
               />
-              <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-black/50 px-3 py-1.5 rounded-lg">
+              <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-slate-800 px-3 py-1.5 rounded-lg">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span className="text-sm">{"You"}</span>
               </div>
             </div>
-            <div className="relative rounded-2xl overflow-hidden bg-[#0c0c22] h-full flex flex-col justify-center items-center">
+            <div className="relative rounded-2xl overflow-hidden border-2 border-[#01aac1] h-full flex flex-col justify-center items-center">
               <video
                 ref={remoteVideoRef}
                 autoPlay
                 playsInline
                 className="w-full h-full object-contain"
               />
+              {!remoteVideoRef.current?.srcObject && (
+                <span className="text-black text-xl absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                  Waiting for another user...
+                </span>
+              )}
             </div>
           </div>
 
@@ -248,7 +266,7 @@ const VCscreen = () => {
             <button
               onClick={toggleMute}
               className={`p-4 rounded-full ${
-                isMuted ? "bg-red-500" : "bg-gray-800"
+                isMuted ? "bg-red-600" : "bg-[#01aac1]"
               } hover:bg-opacity-80 transition-colors`}
             >
               {isMuted ? (
@@ -260,7 +278,7 @@ const VCscreen = () => {
             <button
               onClick={toggleVideo}
               className={`p-4 rounded-full ${
-                isVideoOff ? "bg-red-500" : "bg-gray-800"
+                isVideoOff ? "bg-red-500" : "bg-[#01aac1]"
               } hover:bg-opacity-80 transition-colors`}
             >
               {isVideoOff ? (
@@ -280,62 +298,110 @@ const VCscreen = () => {
         </div>
 
         {/* Participants Panel */}
-        <div className="hidden mt-20 mr-4 w-80 h-[87%] bg-[#0C0C22] p-4 md:flex flex-col rounded-xl">
-          <div className="flex items-center justify-between mb-6">
+        <div className="hidden mt-[88px] mr-4 w-80 min-h-[190px] max-h-[270px] bg-[#ffffff] border-2 border-[#01aac1] md:flex flex-col rounded-xl overflow-y-auto">
+          {" "}
+          <div className="flex items-center justify-between mb-6 text-white bg-[#01aac1] p-4">
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Users className="w-5 h-5" />
               People on call
             </h2>
-            <button className="text-sm px-3 py-1 rounded-lg bg-gray-800">
+            <button className="text-sm font-semibold px-3 py-1 rounded-lg bg-white text-black">
               {Object.keys(allUsers).length} Active
             </button>
           </div>
+          {/* user info section */}
+          <div
+            id="join-btn"
+            className="absolute z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 h-screen w-screen hidden items-center bg-[#ffffff]"
+          >
+            <div className="relative h-full w-[60vw] flex px-16 justify-between items-center text-center bg-[#01aac1] text-black">
+              <div className="flex items-center my-auto">
+                <img src={Logo} alt="logo" className="h-[18vw] rounded-xl" />
+                {/* <span className="ml-4 text-[50px] font-semibold text-white">Zeno</span> */}
+              </div>
+              <div className="text-start">
+              <h2 className="text-[5vw] font-extrabold text-white">
+                ᗯEᒪᑕOᗰE
+              </h2>
+              <h2 className="text-[5vw] font-extrabold text-white">
+                TO
+              </h2>
+              <h2 className="text-[5vw] font-extrabold text-white">
+                ᘔEᑎO
+              </h2>
+              </div>
+            </div>
 
-          <form onSubmit={handleUserSubmit} className="space-y-3">
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              placeholder="Enter your username"
-              className="w-full px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none focus:border-gray-600"
-            />
-            <button
-              type="submit"
-              id="join-btn"
-              className="w-full py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors"
-              onClick={(e) => setIsJoined(true)}
-            >
-              Join Call
-            </button>
-          </form>
-
+            <div className="relative h-full w-[40vw] flex flex-col items-center justify-center text-center bg-transparent text-black">
+              <div className="absolute h-full w-full top-0 -z-10">
+                <img
+                  src={Zeno}
+                  alt="background"
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              <div className="h-1/2 w-[70%] max-w-[380px] border-4 border-[#01aac1] bg-slate-200 p-6 rounded-2xl shadow-lg flex flex-col items-center justify-center">
+              <p className="text-2xl font-bold flex items-center justify-center">
+                <img src={Start} alt="start" className="h-48" />
+              </p>
+                <form onSubmit={handleUserSubmit} className="flex flex-col w-[90%] h-[90%] justify-around">
+                  <input
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your username"
+                    className="w-full px-5 py-2 rounded-lg bg-slate-200 text-black text-lg font-semibold border-2 border-[#01aac1] focus:outline-none focus:border-[#01aac1] focus:ring-2 focus:ring-[#01aac1]"
+                  />
+                  <button
+                    type="submit"
+                    ref={joinBtnRef}
+                    className="w-full py-3 rounded-lg bg-[#01aac1] text-white font-semibold hover:bg-opacity-80 transition-colors"
+                    onClick={(e) => setIsJoined(true)}
+                  >
+                    Join Call
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          {!isJoined && (
+            <div className="flex items-center gap-3 mx-auto my-auto text-xl text-black">
+              No User Connected!
+            </div>
+          )}
           {isJoined && (
-            <div className="flex-1 overflow-y-auto mt-3">
+            <div className="flex-1 overflow-y-auto -mt-1 text-white w-[90%] mx-auto font-semibold">
               {Object.keys(allUsers).map((user) => (
                 <div
-                  key={user}
-                  className="flex items-center justify-between p-3 hover:bg-gray-800 rounded-lg mb-2  border-2 border-gray-800 cursor-pointer"
+                  key={user + Math.random()}
+                  className="flex items-center justify-between p-3 rounded-lg mb-2 border-2 bg-[#01aac1] cursor-pointer"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-black font-bold">
                       {user[0].toUpperCase()}
                     </div>
                     <span>
                       {user} {user === username ? "(You)" : ""}
                     </span>
                   </div>
-                  {user !== username && (
-                    <button
-                      onClick={() => startCall(user)}
-                      className="p-2 rounded-lg bg-gray-800 hover:bg-gray-700"
-                    >
-                      <Phone className="w-4 h-4" />
-                    </button>
-                  )}
                 </div>
               ))}
             </div>
           )}
+          {Object.keys(allUsers).length >= 2 &&
+            username === Object.keys(allUsers).at(-1) && (
+              <button
+                key={username}
+                onClick={() => startCall(Object.keys(allUsers).at(-2))}
+                className="p-2 text-lg text-white bg-green-600 hover:bg-green-700"
+              >
+                {/* <Phone className="w-4 h-4" /> */}
+                Connect
+              </button>
+            )}
+        </div>
+        <div className="absolute top-[48%] right-4 border-2 border-[#01aac1] h-[50%] w-80 rounded-xl overflow-hidden">
+          <Chatbox username={username} />
         </div>
       </div>
     </div>
