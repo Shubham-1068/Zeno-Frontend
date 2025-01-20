@@ -23,6 +23,7 @@ const VCscreen = () => {
   const remoteVideoRef = useRef(null);
   const endCallBtnRef = useRef(null);
   const joinBtnRef = useRef(null);
+  const connectBtnRef = useRef(null);
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
@@ -50,6 +51,12 @@ const VCscreen = () => {
 
     socket.current.on("joined", (users) => {
       setAllUsers(users);
+    });
+
+    socket.current.on("pv", (data) => {
+      if (data === "true") {
+        connectBtnRef.current.style.display = "none";
+      }
     });
 
     socket.current.on("offer", async ({ from, to, offer }) => {
@@ -124,6 +131,8 @@ const VCscreen = () => {
   };
 
   const startCall = async (user) => {
+    socket.current.emit("pv", "true");
+
     const pc = getPeerConnection();
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
@@ -393,6 +402,7 @@ const VCscreen = () => {
           {Object.keys(allUsers).length >= 2 &&
             username === Object.keys(allUsers).at(-1) && (
               <button
+                ref={connectBtnRef}
                 key={username}
                 onClick={() => startCall(Object.keys(allUsers).at(-2))}
                 className="p-2 text-lg text-white bg-green-600 hover:bg-green-700"

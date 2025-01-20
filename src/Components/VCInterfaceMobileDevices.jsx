@@ -63,7 +63,7 @@ const VCscreen = () => {
     });
 
     socket.current.on("pv", (data) => {
-      if (data === "true" && isJoined) {
+      if (data === "true") {
         connectBtnRef.current.style.display = "none";
       }
     });
